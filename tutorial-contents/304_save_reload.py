@@ -41,6 +41,7 @@ def save():
     plt.title('Net1')
     plt.scatter(x.data.numpy(), y.data.numpy())
     plt.plot(x.data.numpy(), prediction.data.numpy(), 'r-', lw=5)
+    #plt.scatter(x.data.numpy(), prediction.data.numpy(), c = 'red')
 
     # 2 ways to save the net
     torch.save(net1, 'net.pkl')  # save entire net

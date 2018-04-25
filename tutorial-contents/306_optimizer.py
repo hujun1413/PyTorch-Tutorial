@@ -66,6 +66,7 @@ for epoch in range(EPOCH):
     for step, (batch_x, batch_y) in enumerate(loader):          # for each training step
         b_x = Variable(batch_x)
         b_y = Variable(batch_y)
+        #print('step ', step)
 
         for net, opt, l_his in zip(nets, optimizers, losses_his):
             output = net(b_x)              # get output for every net

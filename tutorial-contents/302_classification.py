@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*
 """
 View more, visit my tutorial page: https://morvanzhou.github.io/tutorials/
 My Youtube Channel: https://www.youtube.com/user/MorvanZhou
@@ -25,8 +26,8 @@ y = torch.cat((y0, y1), ).type(torch.LongTensor)    # shape (200,) LongTensor = 
 # torch can only train on Variable, so convert them to Variable
 x, y = Variable(x), Variable(y)
 
-# plt.scatter(x.data.numpy()[:, 0], x.data.numpy()[:, 1], c=y.data.numpy(), s=100, lw=0, cmap='RdYlGn')
-# plt.show()
+#plt.scatter(x.data.numpy()[:, 0], x.data.numpy()[:, 1], c=y.data.numpy(), s=100, lw=0, cmap='RdYlGn')
+#plt.show()
 
 
 class Net(torch.nn.Module):
@@ -46,11 +47,15 @@ print(net)  # net architecture
 optimizer = torch.optim.SGD(net.parameters(), lr=0.02)
 loss_func = torch.nn.CrossEntropyLoss()  # the target label is NOT an one-hotted
 
-plt.ion()   # something about plotting
+plt.ion()   # something about plotting，打开交互模式
 
 for t in range(100):
     out = net(x)                 # input x and predict based on x
+    #print(out.size())
+    #print('\n')
+    #print(y.size(0))
     loss = loss_func(out, y)     # must be (1. nn output, 2. target), the target label is NOT one-hotted
+    #print(loss)
 
     optimizer.zero_grad()   # clear gradients for next train
     loss.backward()         # backpropagation, compute gradients
@@ -59,13 +64,25 @@ for t in range(100):
     if t % 2 == 0:
         # plot and show learning process
         plt.cla()
-        prediction = torch.max(out, 1)[1]
-        pred_y = prediction.data.numpy().squeeze()
-        target_y = y.data.numpy()
+        prediction = torch.max(out, 1)[1] #第二列是给定维度上每个最大值的位置索引
+        #print(torch.max(out, 1))
+        #print(torch.max(out, 1)[1])
+        pred_y = prediction.data.squeeze()
+        #print(pred_y.numpy())
+        target_y = y.data
+        #plt.scatter(x.data.numpy()[:, 0], x.data.numpy()[:, 1], c=pred_y, s=100, lw=0, cmap='RdYlGn')
         plt.scatter(x.data.numpy()[:, 0], x.data.numpy()[:, 1], c=pred_y, s=100, lw=0, cmap='RdYlGn')
         accuracy = sum(pred_y == target_y)/200.
         plt.text(1.5, -4, 'Accuracy=%.2f' % accuracy, fontdict={'size': 20, 'color':  'red'})
         plt.pause(0.1)
 
-plt.ioff()
-plt.show()
+
+plt.figure() #在另一个窗口绘制图片
+n_data = torch.ones(100, 2)
+x = torch.normal(0*n_data, 1)      # class0 x data (tensor), shape=(100, 2)
+x = Variable(x)
+out = net(x)           
+plt.scatter(x.data.numpy()[:, 0], x.data.numpy()[:, 1], c=torch.max(out, 1)[1].data.numpy().squeeze())
+
+plt.ioff() #关闭交互模式后调用show来进行显示
+plt.show() #前面不加ioff则会窗口一闪而过

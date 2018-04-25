@@ -90,7 +90,7 @@ class Net(nn.Module):
 
 nets = [Net(batch_normalization=False), Net(batch_normalization=True)]
 
-print(*nets)    # print net architecture
+print(nets)    # print net architecture
 
 opts = [torch.optim.Adam(net.parameters(), lr=LR) for net in nets]
 
@@ -124,7 +124,11 @@ for epoch in range(EPOCH):
         layer_inputs.append(layer_input)
         pre_acts.append(pre_act)
         net.train()             # free moving_mean and moving_var
-    plot_histogram(*layer_inputs, *pre_acts)     # plot histogram
+    l_in = layer_inputs[0]
+    l_in1 = layer_inputs[1]
+    pre_ac = pre_acts[0]
+    pre_ac1 = pre_acts[1]
+    plot_histogram(l_in, l_in1, pre_ac, pre_ac1)     # plot histogram
 
     for step, (b_x, b_y) in enumerate(train_loader):
         b_x, b_y = Variable(b_x), Variable(b_y)
@@ -136,10 +140,10 @@ for epoch in range(EPOCH):
             opt.step()    # it will also learns the parameters in Batch Normalization
 
 
-plt.ioff()
+
 
 # plot training loss
-plt.figure(2)
+plt.figure()
 plt.plot(losses[0], c='#FF9359', lw=3, label='Original')
 plt.plot(losses[1], c='#74BCFF', lw=3, label='Batch Normalization')
 plt.xlabel('step');plt.ylabel('test loss');plt.ylim((0, 2000));plt.legend(loc='best')
@@ -148,9 +152,10 @@ plt.xlabel('step');plt.ylabel('test loss');plt.ylim((0, 2000));plt.legend(loc='b
 # set net to eval mode to freeze the parameters in batch normalization layers
 [net.eval() for net in nets]    # set eval mode to fix moving_mean and moving_var
 preds = [net(test_x)[0] for net in nets]
-plt.figure(3)
+plt.figure()
 plt.plot(test_x.data.numpy(), preds[0].data.numpy(), c='#FF9359', lw=4, label='Original')
 plt.plot(test_x.data.numpy(), preds[1].data.numpy(), c='#74BCFF', lw=4, label='Batch Normalization')
 plt.scatter(test_x.data.numpy(), test_y.data.numpy(), c='r', s=50, alpha=0.2, label='train')
 plt.legend(loc='best')
+plt.ioff()
 plt.show()

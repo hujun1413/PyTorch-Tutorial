@@ -89,6 +89,7 @@ for step in range(60):
     optimizer.step()                        # apply gradients
 
     # plotting
+    #plt.cla()
     plt.plot(steps, y_np.flatten(), 'r-')
     plt.plot(steps, prediction.data.numpy().flatten(), 'b-')
     plt.draw(); plt.pause(0.05)

@@ -33,6 +33,7 @@ PAINT_POINTS = np.vstack([np.linspace(-1, 1, ART_COMPONENTS) for _ in range(BATC
 
 def artist_works():     # painting from the famous artist (real target)
     a = np.random.uniform(1, 2, size=BATCH_SIZE)[:, np.newaxis]
+    #print(a)
     paintings = a * np.power(PAINT_POINTS, 2) + (a-1)
     paintings = torch.from_numpy(paintings).float()
     return Variable(paintings)

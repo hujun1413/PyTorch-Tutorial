@@ -12,10 +12,12 @@ from torch.autograd import Variable
 # but this graph is dynamic compared with a static graph in Tensorflow or Theano.
 # So torch does not have placeholder, torch can just pass variable to the computational graph.
 
-tensor = torch.FloatTensor([[1,2],[3,4]])            # build a tensor
+tensor = torch.FloatTensor([[1,2,7],[3,4,8],[5,6,9]])            # build a tensor
 variable = Variable(tensor, requires_grad=True)      # build a variable, usually for compute gradients
 
 print(tensor)       # [torch.FloatTensor of size 2x2]
+print(tensor[:2])
+print(tensor[:2, :2])
 print(variable)     # [torch.FloatTensor of size 2x2]
 
 # till now the tensor and variable seem the same.
