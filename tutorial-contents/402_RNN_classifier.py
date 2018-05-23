@@ -38,9 +38,9 @@ train_data = dsets.MNIST(
 # plot one example
 print(train_data.train_data.size())     # (60000, 28, 28)
 print(train_data.train_labels.size())   # (60000)
-plt.imshow(train_data.train_data[0].numpy(), cmap='gray')
-plt.title('%i' % train_data.train_labels[0])
-plt.show()
+#plt.imshow(train_data.train_data[0].numpy(), cmap='gray')
+#plt.title('%i' % train_data.train_labels[0])
+#plt.show()
 
 # Data Loader for easy mini-batch return in training
 train_loader = torch.utils.data.DataLoader(dataset=train_data, batch_size=BATCH_SIZE, shuffle=True)
@@ -70,9 +70,11 @@ class RNN(nn.Module):
         # h_n shape (n_layers, batch, hidden_size)
         # h_c shape (n_layers, batch, hidden_size)
         r_out, (h_n, h_c) = self.rnn(x, None)   # None represents zero initial hidden state
+        print('x.size=', x.size(), 'r_out.size=', r_out.size(), ' h_n.size=', h_n.size(), ' h_c.size=', h_c.size())
 
         # choose r_out at the last time step
         out = self.out(r_out[:, -1, :])
+        print('out.size=', out.size())
         return out
 
 
@@ -89,6 +91,7 @@ for epoch in range(EPOCH):
         b_y = Variable(y)                               # batch y
 
         output = rnn(b_x)                               # rnn output
+        break
         loss = loss_func(output, b_y)                   # cross entropy loss
         optimizer.zero_grad()                           # clear gradients for this training step
         loss.backward()                                 # backpropagation, compute gradients
